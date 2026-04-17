@@ -2,17 +2,12 @@
 
 #include <cstdint>
 #include <vector>
+#include <memory>
+#include "rhi/RHITexture.h"
 
 enum class FrameType {
     VIDEO,
     AUDIO
-};
-
-enum class GraphicsAPI {
-    NONE,
-    OPENGL,
-    VULKAN,
-    METAL
 };
 
 struct MediaFrame {
@@ -21,11 +16,8 @@ struct MediaFrame {
     // Base synchronization clock
     int64_t pts; // Presentation Timestamp
 
-    // Video specific graphics context
-    GraphicsAPI backend_api = GraphicsAPI::NONE;
-
-    // Generic handle for VkImage, id<MTLTexture>, or GLuint
-    uint64_t texture_handle = 0;
+    // Video specific: Abstract RHI Texture for zero-copy rendering
+    std::shared_ptr<RHITexture> texture = nullptr;
     void* hw_buffer = nullptr; // For platform-specific opaque references (CVPixelBufferRef, HardwareBuffer)
     float transform_matrix[16] = {
         1.0f, 0.0f, 0.0f, 0.0f,

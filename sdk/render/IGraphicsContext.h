@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../core/MediaFrame.h"
+#include "../core/rhi/IRHI.h"
 #include <memory>
 #include <string>
 
@@ -10,6 +10,9 @@ public:
 
     // Identify which graphics API this context encapsulates
     virtual GraphicsAPI getAPI() const = 0;
+
+    // Retrieve the active Render Hardware Interface driven by this context
+    virtual IRHI* getRHI() const = 0;
 
     // Descriptive name (e.g., "Vulkan Context", "Metal Context")
     virtual std::string getName() const = 0;
