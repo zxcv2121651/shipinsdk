@@ -25,9 +25,14 @@ target_include_directories(sdk_codec INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
 # Link FFmpeg to codec
 target_link_libraries(sdk_codec INTERFACE PkgConfig::FFMPEG)
 
-# Link iOS frameworks if on iOS/Apple
+# Link Apple-specific frameworks
 if(APPLE)
     target_link_libraries(sdk_codec INTERFACE "-framework VideoToolbox" "-framework CoreMedia")
+    target_link_libraries(sdk_render INTERFACE "-framework Metal" "-framework MetalKit")
+else()
+    # Find Vulkan (Android/Linux/Windows)
+    find_package(Vulkan REQUIRED)
+    target_link_libraries(sdk_render INTERFACE Vulkan::Vulkan)
 endif()
 
 # Dependencies between modules

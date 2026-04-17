@@ -4,7 +4,6 @@
 #include <mutex>
 #include <condition_variable>
 #include <memory>
-#include <optional>
 #include "../core/MediaFrame.h"
 
 class FrameQueue {
@@ -31,7 +30,7 @@ public:
         std::unique_lock<std::mutex> lock(mutex_);
         cond_.wait(lock, [this] { return !queue_.empty(); });
 
-        auto frame = queue_.front();
+        auto frame = std::move(queue_.front());
         queue_.pop();
         return frame;
     }
@@ -43,7 +42,7 @@ public:
             return nullptr;
         }
 
-        auto frame = queue_.front();
+        auto frame = std::move(queue_.front());
         queue_.pop();
         return frame;
     }
