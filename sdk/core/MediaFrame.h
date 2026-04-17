@@ -8,14 +8,24 @@ enum class FrameType {
     AUDIO
 };
 
+enum class GraphicsAPI {
+    NONE,
+    OPENGL,
+    VULKAN,
+    METAL
+};
+
 struct MediaFrame {
     FrameType type;
 
     // Base synchronization clock
     int64_t pts; // Presentation Timestamp
 
-    // ANGLE abstracts everything back to OpenGL ES textures
-    uint32_t texture_id = 0;
+    // Video specific graphics context
+    GraphicsAPI backend_api = GraphicsAPI::NONE;
+
+    // Generic handle for VkImage, id<MTLTexture>, or GLuint
+    uint64_t texture_handle = 0;
     void* hw_buffer = nullptr; // For platform-specific opaque references (CVPixelBufferRef, HardwareBuffer)
     float transform_matrix[16] = {
         1.0f, 0.0f, 0.0f, 0.0f,

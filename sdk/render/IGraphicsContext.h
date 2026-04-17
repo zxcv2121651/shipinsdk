@@ -8,7 +8,10 @@ class IGraphicsContext {
 public:
     virtual ~IGraphicsContext() = default;
 
-    // Descriptive name (e.g., "ANGLE (Metal Backend)", "ANGLE (Vulkan Backend)")
+    // Identify which graphics API this context encapsulates
+    virtual GraphicsAPI getAPI() const = 0;
+
+    // Descriptive name (e.g., "Vulkan Context", "Metal Context")
     virtual std::string getName() const = 0;
 
     // Lifecycle management
