@@ -74,4 +74,4 @@
 - **29. 色彩管理与 HDR 管线**：Dolby Vision / HLG 到 SDR 映射。
 - **30. 动效脚本虚拟机 (Script VM)**：热更新特效脚本执行器。
 
-> *详细的 6750 项开发任务清单请查阅同级目录下的 `TikTok_SDK_6750_Tasks_Plan.md` 文件。*
+> *详细的 30,150 项极度细化原子级开发任务清单请查阅同级目录下的 `TikTok_SDK_30150_Atomic_Tasks_Plan.csv` 文件。*
