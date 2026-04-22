@@ -120,13 +120,22 @@ SDKError LockFreeQueue::try_pop(std::shared_ptr<MediaFrame>& out_frame) {
 }
 
 void LockFreeQueue::stop() {
-    SDKState current = pimpl_->state.load(std::memory_order_acquire);
-    if (current == SDKState::RUNNING || current == SDKState::READY) {
-        pimpl_->state.store(SDKState::STOPPED, std::memory_order_release);
-        // Clear references
+    SDKState expected_running = SDKState::RUNNING;
+    SDKState expected_ready = SDKState::READY;
+
+    if (pimpl_->state.compare_exchange_strong(expected_running, SDKState::STOPPED, std::memory_order_release) ||
+        pimpl_->state.compare_exchange_strong(expected_ready, SDKState::STOPPED, std::memory_order_release)) {
+
+        while (pimpl_->spinlock.test_and_set(std::memory_order_acquire)) {
+            // spin
+        }
+
+        // Clear references safely under lock
         for(auto& slot : pimpl_->buffer) {
             slot.reset();
         }
+
+        pimpl_->spinlock.clear(std::memory_order_release);
     }
 }
 

@@ -10,6 +10,7 @@ pkg_check_modules(FFMPEG REQUIRED IMPORTED_TARGET libavcodec libavformat libavut
 
 # Define modules
 add_library(sdk_base sdk/base/queue/LockFreeQueue.cpp)
+add_library(sdk_pipeline sdk/pipeline/node/NodeBase.cpp)
 add_library(sdk_core INTERFACE)
 add_library(sdk_platform INTERFACE)
 add_library(sdk_render INTERFACE)
@@ -21,6 +22,7 @@ set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fsanitize=address")
 
 # Target include directories
 target_include_directories(sdk_base PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(sdk_pipeline PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_include_directories(sdk_core INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
 target_include_directories(sdk_platform INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
 target_include_directories(sdk_render INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
@@ -32,6 +34,9 @@ find_package(GTest REQUIRED)
 # Test Executable
 add_executable(sdk_base_tests test/sdk_base/queue/LockFreeQueueTest.cpp)
 target_link_libraries(sdk_base_tests sdk_base GTest::gtest_main)
+
+add_executable(sdk_pipeline_tests test/sdk_pipeline/node/DAGTopologyTest.cpp)
+target_link_libraries(sdk_pipeline_tests sdk_pipeline sdk_base GTest::gtest_main)
 
 # Link Apple-specific frameworks
 if(APPLE)
@@ -45,6 +50,7 @@ endif()
 
 # Dependencies between modules
 target_link_libraries(sdk_core INTERFACE sdk_base)
-target_link_libraries(sdk_platform INTERFACE sdk_core)
-target_link_libraries(sdk_render INTERFACE sdk_core)
-target_link_libraries(sdk_codec INTERFACE sdk_core PkgConfig::FFMPEG)
+target_link_libraries(sdk_pipeline PUBLIC sdk_core sdk_base)
+target_link_libraries(sdk_platform INTERFACE sdk_pipeline)
+target_link_libraries(sdk_render INTERFACE sdk_pipeline)
+target_link_libraries(sdk_codec INTERFACE sdk_pipeline PkgConfig::FFMPEG)

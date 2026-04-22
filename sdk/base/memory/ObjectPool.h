@@ -41,15 +41,28 @@ public:
         }
 
         // Create a custom deleter that returns the object to this pool.
-        // Using a raw pointer here since shared_from_this() requires the pool itself to be owned by a shared_ptr,
-        // which might not be the case in all SDK lifecycles. It is the responsibility of the SDK
-        // engine to ensure the ObjectPool outlives the inflight frames.
+        // Capturing a weak_ptr to the pool ensures safety if the pool is destroyed before the object.
+        std::weak_ptr<ObjectPool<T>> weak_pool;
+        try {
+            weak_pool = this->weak_from_this();
+        } catch (const std::bad_weak_ptr&) {
+            // Fallback for cases where the pool was allocated on the stack (non-shared ownership).
+            // It is unsafe to use the pool after it goes out of scope in this mode.
+        }
+
         ObjectPool<T>* raw_pool = this;
 
-        return std::shared_ptr<T>(obj.release(), [raw_pool](T* ptr) {
+        return std::shared_ptr<T>(obj.release(), [weak_pool, raw_pool](T* ptr) {
             std::unique_ptr<T> uptr(ptr); // ensure cleanup
-            if (raw_pool) {
-                raw_pool->release(std::move(uptr));
+            if (auto pool = weak_pool.lock()) {
+                pool->release(std::move(uptr));
+            } else {
+                // If weak_ptr couldn't be obtained initially, fallback to raw pointer assumption.
+                // In a production codebase, ObjectPool MUST be allocated via std::make_shared.
+                if (raw_pool && weak_pool.expired() == false) {
+                   // Only execute if not previously assigned and expired
+                   raw_pool->release(std::move(uptr));
+                }
             }
         });
     }
