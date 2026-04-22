@@ -15,6 +15,10 @@ add_library(sdk_platform INTERFACE)
 add_library(sdk_render INTERFACE)
 add_library(sdk_codec INTERFACE)
 
+# Enable ASan for Memory Leak detection in tests (MEM-10)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -fno-omit-frame-pointer")
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fsanitize=address")
+
 # Target include directories
 target_include_directories(sdk_base PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_include_directories(sdk_core INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
@@ -24,6 +28,10 @@ target_include_directories(sdk_codec INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
 
 # Find GTest/GMock for testing
 find_package(GTest REQUIRED)
+
+# Test Executable
+add_executable(sdk_base_tests test/sdk_base/queue/LockFreeQueueTest.cpp)
+target_link_libraries(sdk_base_tests sdk_base GTest::gtest_main)
 
 # Link Apple-specific frameworks
 if(APPLE)

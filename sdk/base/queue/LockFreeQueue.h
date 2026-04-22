@@ -24,6 +24,7 @@ public:
     SDKError push(std::shared_ptr<MediaFrame> frame) override;
     SDKError try_pop(std::shared_ptr<MediaFrame>& out_frame) override;
     void stop() override;
+    size_t getMemoryFootprint() const override;
 
 private:
     // PIMPL idiom: Hide implementation details to reduce compile times

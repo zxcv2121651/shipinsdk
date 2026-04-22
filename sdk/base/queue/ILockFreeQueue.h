@@ -69,6 +69,12 @@ public:
      * @thread_safety Thread-Safe
      */
     virtual void stop() = 0;
+
+    /**
+     * @brief Reports the memory footprint for telemetry.
+     * @thread_safety Thread-Safe
+     */
+    virtual size_t getMemoryFootprint() const = 0;
 };
 
 // Factory function exported for creation (ABI boundary boundary)
