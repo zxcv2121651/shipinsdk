@@ -4,15 +4,18 @@
 #include <memory>
 #include <string>
 
+namespace sdk {
+namespace render {
+
 class IGraphicsContext {
 public:
     virtual ~IGraphicsContext() = default;
 
     // Identify which graphics API this context encapsulates
-    virtual GraphicsAPI getAPI() const = 0;
+    virtual core::rhi::GraphicsAPI getAPI() const = 0;
 
     // Retrieve the active Render Hardware Interface driven by this context
-    virtual IRHI* getRHI() const = 0;
+    virtual core::rhi::IRHI* getRHI() const = 0;
 
     // Descriptive name (e.g., "Vulkan Context", "Metal Context")
     virtual std::string getName() const = 0;
@@ -25,3 +28,6 @@ public:
     // Kept opaque here so clients can cast based on getAPI() if absolutely necessary
     virtual void* getNativeHandle() = 0;
 };
+
+} // namespace render
+} // namespace sdk
