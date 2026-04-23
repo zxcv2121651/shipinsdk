@@ -17,7 +17,7 @@ add_library(sdk_platform INTERFACE)
 if(APPLE)
     add_library(sdk_render sdk/render/rhi/RHIFactory.cpp sdk/render/rhi/metal/MetalDevice.mm)
 else()
-    add_library(sdk_render sdk/render/rhi/RHIFactory.cpp sdk/render/rhi/vulkan/VulkanDevice.cpp)
+    add_library(sdk_render sdk/render/rhi/RHIFactory.cpp sdk/render/rhi/vulkan/VulkanDevice.cpp sdk/render/rhi/opengl/GLDevice.cpp)
 endif()
 
 add_library(sdk_codec INTERFACE)
@@ -51,7 +51,9 @@ if(APPLE)
 else()
     # Find Vulkan (Android/Linux/Windows)
     find_package(Vulkan REQUIRED)
-    target_link_libraries(sdk_render PUBLIC Vulkan::Vulkan)
+
+    # Mocking EGL and GLESv2 linkage for the OpenGL Fallback backend
+    target_link_libraries(sdk_render PUBLIC Vulkan::Vulkan "EGL" "GLESv2")
 endif()
 
 # Dependencies between modules

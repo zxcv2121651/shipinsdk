@@ -8,6 +8,8 @@
     #include "vulkan/VulkanDevice.h"
 #endif
 
+#include "opengl/GLDevice.h"
+
 namespace sdk {
 namespace render {
 namespace rhi {
@@ -29,9 +31,16 @@ std::shared_ptr<core::rhi::IRHI> RHIFactory::createBestAvailableRHI() {
         std::cout << "Successfully initialized Vulkan RHI backend." << std::endl;
         return vulkanRhi;
     }
-    std::cerr << "Failed to initialize Vulkan RHI backend." << std::endl;
 
-    // In a full implementation, fallback to OpenGL here.
+    std::cerr << "Vulkan initialization failed. Falling back to OpenGL ES 3.0 backend." << std::endl;
+
+    auto glRhi = std::make_shared<GLDevice>();
+    if (glRhi->initialize() == base::SDKError::OK) {
+        std::cout << "Successfully initialized OpenGL ES RHI backend." << std::endl;
+        return glRhi;
+    }
+
+    std::cerr << "Failed to initialize ALL graphics backends. Fatal error." << std::endl;
     return nullptr;
 #endif
 }
