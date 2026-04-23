@@ -10,6 +10,9 @@ enum class FrameType {
     AUDIO
 };
 
+namespace sdk {
+namespace core {
+
 struct MediaFrame {
     FrameType type;
 
@@ -17,7 +20,7 @@ struct MediaFrame {
     int64_t pts; // Presentation Timestamp
 
     // Video specific: Abstract RHI Texture for zero-copy rendering
-    std::shared_ptr<RHITexture> texture = nullptr;
+    std::shared_ptr<rhi::RHITexture> texture = nullptr;
     void* hw_buffer = nullptr; // For platform-specific opaque references (CVPixelBufferRef, HardwareBuffer)
     float transform_matrix[16] = {
         1.0f, 0.0f, 0.0f, 0.0f,
@@ -41,3 +44,6 @@ struct MediaFrame {
     // though the requirement says "Use std::shared_ptr<MediaFrame>进行传递",
     // default copy constructor is kept but shouldn't be used across pipeline nodes.
 };
+
+} // namespace core
+} // namespace sdk

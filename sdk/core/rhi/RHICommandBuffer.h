@@ -1,5 +1,9 @@
 #pragma once
 
+namespace sdk {
+namespace core {
+namespace rhi {
+
 class RHICommandBuffer {
 public:
     virtual ~RHICommandBuffer() = default;
@@ -9,3 +13,7 @@ public:
 
     // In the future, methods like bindPipeline, draw, bindTexture will go here.
 };
+
+} // namespace rhi
+} // namespace core
+} // namespace sdk

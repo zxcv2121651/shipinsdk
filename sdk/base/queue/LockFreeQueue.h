@@ -21,8 +21,8 @@ public:
     LockFreeQueue& operator=(LockFreeQueue&&) = delete;
 
     SDKError initialize(const Config& config) override;
-    SDKError push(std::shared_ptr<MediaFrame> frame) override;
-    SDKError try_pop(std::shared_ptr<MediaFrame>& out_frame) override;
+    SDKError push(std::shared_ptr<core::MediaFrame> frame) override;
+    SDKError try_pop(std::shared_ptr<core::MediaFrame>& out_frame) override;
     void stop() override;
     size_t getMemoryFootprint() const override;
 

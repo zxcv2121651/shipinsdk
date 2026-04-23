@@ -20,7 +20,7 @@ struct alignas(64) LockFreeQueue::Impl {
     std::atomic_flag spinlock = ATOMIC_FLAG_INIT;
 
     // Internal buffer. In a real MPMC lock-free queue, this array holds atomic wrapper objects.
-    std::vector<std::shared_ptr<MediaFrame>> buffer;
+    std::vector<std::shared_ptr<core::MediaFrame>> buffer;
 
     bool validateState(SDKState expected) const {
         return state.load(std::memory_order_acquire) == expected;
@@ -54,7 +54,7 @@ SDKError LockFreeQueue::initialize(const Config& config) {
     return SDKError::OK;
 }
 
-SDKError LockFreeQueue::push(std::shared_ptr<MediaFrame> frame) {
+SDKError LockFreeQueue::push(std::shared_ptr<core::MediaFrame> frame) {
     if (!pimpl_->validateState(SDKState::RUNNING)) {
         return SDKError::ERR_INVALID_STATE;
     }
@@ -95,7 +95,7 @@ SDKError LockFreeQueue::push(std::shared_ptr<MediaFrame> frame) {
     return SDKError::OK;
 }
 
-SDKError LockFreeQueue::try_pop(std::shared_ptr<MediaFrame>& out_frame) {
+SDKError LockFreeQueue::try_pop(std::shared_ptr<core::MediaFrame>& out_frame) {
     if (!pimpl_->validateState(SDKState::RUNNING)) {
         return SDKError::ERR_INVALID_STATE;
     }
@@ -142,7 +142,7 @@ void LockFreeQueue::stop() {
 size_t LockFreeQueue::getMemoryFootprint() const {
     size_t size = sizeof(LockFreeQueue) + sizeof(Impl);
     // Add dynamically allocated buffer size
-    size += pimpl_->buffer.capacity() * sizeof(std::shared_ptr<MediaFrame>);
+    size += pimpl_->buffer.capacity() * sizeof(std::shared_ptr<core::MediaFrame>);
     return size;
 }
 

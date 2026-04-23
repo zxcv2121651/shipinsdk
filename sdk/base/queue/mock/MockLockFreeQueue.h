@@ -15,9 +15,10 @@ namespace mock {
 class MockLockFreeQueue : public ILockFreeQueue {
 public:
     MOCK_METHOD(SDKError, initialize, (const Config& config), (override));
-    MOCK_METHOD(SDKError, push, (std::shared_ptr<MediaFrame> frame), (override));
-    MOCK_METHOD(SDKError, try_pop, (std::shared_ptr<MediaFrame>& out_frame), (override));
+    MOCK_METHOD(SDKError, push, (std::shared_ptr<core::MediaFrame> frame), (override));
+    MOCK_METHOD(SDKError, try_pop, (std::shared_ptr<core::MediaFrame>& out_frame), (override));
     MOCK_METHOD(void, stop, (), (override));
+    MOCK_METHOD(size_t, getMemoryFootprint, (), (const, override));
 };
 
 } // namespace mock

@@ -10,7 +10,7 @@ public:
     TestSourceNode() : SourceNode("TestSource") {}
 
     SDKError produceFrame(int pts) {
-        auto frame = std::make_shared<MediaFrame>();
+        auto frame = std::make_shared<sdk::core::MediaFrame>();
         frame->pts = pts;
         return emitFrame(frame);
     }
@@ -20,7 +20,7 @@ class TestSinkNode : public SinkNode {
 public:
     TestSinkNode() : SinkNode("TestSink") {}
 
-    SDKError processFrame(std::shared_ptr<MediaFrame> frame) override {
+    SDKError processFrame(std::shared_ptr<sdk::core::MediaFrame> frame) override {
         last_pts_ = frame->pts;
         frames_processed_++;
         return SDKError::OK;
@@ -28,7 +28,7 @@ public:
 
     // Helper to simulate worker thread popping and processing
     void drainQueue() {
-        std::shared_ptr<MediaFrame> frame;
+        std::shared_ptr<sdk::core::MediaFrame> frame;
         while(tryFetchInputFrame(frame) == SDKError::OK) {
             processFrame(frame);
         }
@@ -71,7 +71,7 @@ TEST(DAGTopologyTest, SourceToSinkFanOut) {
     EXPECT_EQ(sink2->last_pts_, 1024);
 
     // Prevent Source from accepting external inputs directly
-    auto illegal_frame = std::make_shared<MediaFrame>();
+    auto illegal_frame = std::make_shared<sdk::core::MediaFrame>();
     EXPECT_EQ(source->onInputFrame(illegal_frame), SDKError::ERR_INVALID_STATE);
 
     // Prevent Sink from accepting downstream nodes

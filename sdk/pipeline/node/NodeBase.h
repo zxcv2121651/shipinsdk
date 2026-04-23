@@ -29,18 +29,18 @@ public:
     base::SDKState getState() const override;
 
     base::SDKError addDownstreamNode(std::shared_ptr<INode> downstream_node) override;
-    base::SDKError onInputFrame(std::shared_ptr<MediaFrame> frame) override;
+    base::SDKError onInputFrame(std::shared_ptr<core::MediaFrame> frame) override;
 
 protected:
     // Core processing function to be implemented by specialized nodes (Filters, Sinks).
     // Called when a frame is popped from the internal queue.
-    virtual base::SDKError processFrame(std::shared_ptr<MediaFrame> frame) = 0;
+    virtual base::SDKError processFrame(std::shared_ptr<core::MediaFrame> frame) = 0;
 
     // Dispatches the frame to all registered downstream nodes (Fan-out).
-    base::SDKError dispatchToDownstream(std::shared_ptr<MediaFrame> frame);
+    base::SDKError dispatchToDownstream(std::shared_ptr<core::MediaFrame> frame);
 
     // Pops a frame from the internal queue for processing.
-    base::SDKError tryFetchInputFrame(std::shared_ptr<MediaFrame>& out_frame);
+    base::SDKError tryFetchInputFrame(std::shared_ptr<core::MediaFrame>& out_frame);
 
 private:
     std::string name_;

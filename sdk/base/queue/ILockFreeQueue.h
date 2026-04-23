@@ -56,13 +56,13 @@ public:
      * @brief Pushes a frame into the queue.
      * @thread_safety Thread-Safe (Multiple Producers allowed)
      */
-    virtual SDKError push(std::shared_ptr<MediaFrame> frame) = 0;
+    virtual SDKError push(std::shared_ptr<core::MediaFrame> frame) = 0;
 
     /**
      * @brief Attempts to pop a frame from the queue without blocking.
      * @thread_safety Thread-Safe (Multiple Consumers allowed)
      */
-    virtual SDKError try_pop(std::shared_ptr<MediaFrame>& out_frame) = 0;
+    virtual SDKError try_pop(std::shared_ptr<core::MediaFrame>& out_frame) = 0;
 
     /**
      * @brief Cleans up resources.

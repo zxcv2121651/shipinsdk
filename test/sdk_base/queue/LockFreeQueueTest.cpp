@@ -13,10 +13,10 @@ protected:
 };
 
 TEST_F(LockFreeQueueTest, FailsWithoutInit) {
-    auto frame = std::make_shared<MediaFrame>();
+    auto frame = std::make_shared<sdk::core::MediaFrame>();
     EXPECT_EQ(queue->push(frame), SDKError::ERR_INVALID_STATE);
 
-    std::shared_ptr<MediaFrame> out;
+    std::shared_ptr<sdk::core::MediaFrame> out;
     EXPECT_EQ(queue->try_pop(out), SDKError::ERR_INVALID_STATE);
 }
 
@@ -35,10 +35,10 @@ TEST_F(LockFreeQueueTest, PushAndPopWorks) {
     auto config = ILockFreeQueue::Builder().setCapacity(2).build();
     ASSERT_EQ(queue->initialize(config), SDKError::OK);
 
-    auto frame1 = std::make_shared<MediaFrame>(); frame1->pts = 100;
+    auto frame1 = std::make_shared<sdk::core::MediaFrame>(); frame1->pts = 100;
     EXPECT_EQ(queue->push(frame1), SDKError::OK);
 
-    std::shared_ptr<MediaFrame> out;
+    std::shared_ptr<sdk::core::MediaFrame> out;
     EXPECT_EQ(queue->try_pop(out), SDKError::OK);
     ASSERT_NE(out, nullptr);
     EXPECT_EQ(out->pts, 100);
@@ -54,9 +54,9 @@ TEST_F(LockFreeQueueTest, DropOldestStrategyWorks) {
                     .build();
     ASSERT_EQ(queue->initialize(config), SDKError::OK);
 
-    auto frame1 = std::make_shared<MediaFrame>(); frame1->pts = 1;
-    auto frame2 = std::make_shared<MediaFrame>(); frame2->pts = 2;
-    auto frame3 = std::make_shared<MediaFrame>(); frame3->pts = 3;
+    auto frame1 = std::make_shared<sdk::core::MediaFrame>(); frame1->pts = 1;
+    auto frame2 = std::make_shared<sdk::core::MediaFrame>(); frame2->pts = 2;
+    auto frame3 = std::make_shared<sdk::core::MediaFrame>(); frame3->pts = 3;
 
     EXPECT_EQ(queue->push(frame1), SDKError::OK);
     EXPECT_EQ(queue->push(frame2), SDKError::OK);
@@ -64,7 +64,7 @@ TEST_F(LockFreeQueueTest, DropOldestStrategyWorks) {
     // Pushing third frame into capacity=2 with drop_oldest=true should succeed and drop frame1
     EXPECT_EQ(queue->push(frame3), SDKError::OK);
 
-    std::shared_ptr<MediaFrame> out;
+    std::shared_ptr<sdk::core::MediaFrame> out;
     EXPECT_EQ(queue->try_pop(out), SDKError::OK);
     EXPECT_EQ(out->pts, 2); // Frame 1 was dropped, so oldest is now Frame 2
 
@@ -79,9 +79,9 @@ TEST_F(LockFreeQueueTest, RejectOnFullStrategyWorks) {
                     .build();
     ASSERT_EQ(queue->initialize(config), SDKError::OK);
 
-    auto frame1 = std::make_shared<MediaFrame>();
-    auto frame2 = std::make_shared<MediaFrame>();
-    auto frame3 = std::make_shared<MediaFrame>();
+    auto frame1 = std::make_shared<sdk::core::MediaFrame>();
+    auto frame2 = std::make_shared<sdk::core::MediaFrame>();
+    auto frame3 = std::make_shared<sdk::core::MediaFrame>();
 
     EXPECT_EQ(queue->push(frame1), SDKError::OK);
     EXPECT_EQ(queue->push(frame2), SDKError::OK);

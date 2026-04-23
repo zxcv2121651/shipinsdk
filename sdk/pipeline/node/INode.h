@@ -40,7 +40,7 @@ public:
      * @brief Called by an upstream node (or external source) to push a frame into this node's queue.
      * @thread_safety Thread-Safe
      */
-    virtual base::SDKError onInputFrame(std::shared_ptr<MediaFrame> frame) = 0;
+    virtual base::SDKError onInputFrame(std::shared_ptr<core::MediaFrame> frame) = 0;
 };
 
 } // namespace pipeline

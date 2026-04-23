@@ -83,7 +83,7 @@ base::SDKError NodeBase::addDownstreamNode(std::shared_ptr<INode> downstream_nod
     return base::SDKError::OK;
 }
 
-base::SDKError NodeBase::onInputFrame(std::shared_ptr<MediaFrame> frame) {
+base::SDKError NodeBase::onInputFrame(std::shared_ptr<core::MediaFrame> frame) {
     if (state_.load() != base::SDKState::RUNNING) {
         return base::SDKError::ERR_INVALID_STATE;
     }
@@ -92,14 +92,14 @@ base::SDKError NodeBase::onInputFrame(std::shared_ptr<MediaFrame> frame) {
     return input_queue_->push(frame);
 }
 
-base::SDKError NodeBase::tryFetchInputFrame(std::shared_ptr<MediaFrame>& out_frame) {
+base::SDKError NodeBase::tryFetchInputFrame(std::shared_ptr<core::MediaFrame>& out_frame) {
     if (state_.load() != base::SDKState::RUNNING) {
         return base::SDKError::ERR_INVALID_STATE;
     }
     return input_queue_->try_pop(out_frame);
 }
 
-base::SDKError NodeBase::dispatchToDownstream(std::shared_ptr<MediaFrame> frame) {
+base::SDKError NodeBase::dispatchToDownstream(std::shared_ptr<core::MediaFrame> frame) {
     if (state_.load() != base::SDKState::RUNNING) {
         return base::SDKError::ERR_INVALID_STATE;
     }

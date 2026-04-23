@@ -2,6 +2,10 @@
 
 #include <cstdint>
 
+namespace sdk {
+namespace core {
+namespace rhi {
+
 enum class GraphicsAPI {
     NONE,
     OPENGL,
@@ -31,3 +35,7 @@ public:
     // Platform-specific internal handles (VkImage, id<MTLTexture>, GLuint)
     virtual void* getNativeHandle() const = 0;
 };
+
+} // namespace rhi
+} // namespace core
+} // namespace sdk

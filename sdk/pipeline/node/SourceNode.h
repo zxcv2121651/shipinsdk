@@ -17,13 +17,13 @@ public:
     virtual ~SourceNode() = default;
 
     // Source nodes usually ignore external inputs
-    base::SDKError onInputFrame(std::shared_ptr<MediaFrame> frame) override {
+    base::SDKError onInputFrame(std::shared_ptr<core::MediaFrame> frame) override {
         return base::SDKError::ERR_INVALID_STATE;
     }
 
 protected:
     // Source nodes don't process external queue frames
-    base::SDKError processFrame(std::shared_ptr<MediaFrame> frame) override {
+    base::SDKError processFrame(std::shared_ptr<core::MediaFrame> frame) override {
         return base::SDKError::ERR_INVALID_STATE;
     }
 
@@ -31,7 +31,7 @@ protected:
      * @brief Called by hardware callbacks (e.g., AVCaptureSession or Camera2).
      *        Generates the shared MediaFrame and fires it down the DAG.
      */
-    base::SDKError emitFrame(std::shared_ptr<MediaFrame> frame) {
+    base::SDKError emitFrame(std::shared_ptr<core::MediaFrame> frame) {
         return dispatchToDownstream(frame);
     }
 };
